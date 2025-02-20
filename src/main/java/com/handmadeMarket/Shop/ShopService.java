@@ -25,6 +25,9 @@ public class ShopService {
         return shopRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("shop not found with id " + id));
     }
+    public List<Shop> getByIdList(List<String> idList) {
+        return shopRepository.findByIdIn(idList);
+    }
 
     public Shop addShop(Shop shop) {
         return shopRepository.save(shop);

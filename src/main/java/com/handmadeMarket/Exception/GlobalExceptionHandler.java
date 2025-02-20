@@ -10,6 +10,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,7 +45,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<Map<String, Object>> handleRuntimeException(IllegalStateException ex) {
+    public ResponseEntity<Map<String, Object>> handleRuntimeException(RuntimeException ex) {
         return buildErrorResponse(ex, HttpStatus.INTERNAL_SERVER_ERROR);
     }
     @ExceptionHandler(Exception.class)
@@ -56,7 +57,9 @@ public class GlobalExceptionHandler {
 
     private ResponseEntity<Map<String, Object>> buildErrorResponse(Exception ex, HttpStatus status) {
         Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("timestamp", LocalDateTime.now());
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+
+        errorResponse.put("timestamp", LocalDateTime.now().format(formatter));
         errorResponse.put("status", status.value());
         errorResponse.put("error", status.getReasonPhrase());
         errorResponse.put("message", ex.getMessage());

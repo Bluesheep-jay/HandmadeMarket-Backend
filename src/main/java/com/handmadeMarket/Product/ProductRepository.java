@@ -9,4 +9,6 @@ public interface ProductRepository extends MongoRepository<Product, String> {
 
     @Query("{'categoryId': ?0}")
     List<Product> findByCategoryId(String categoryId);
+
+    List<Product> findByIdIn(List<String> idList);
 }

@@ -1,4 +1,4 @@
-package com.handmadeMarket.Users.dto;
+package com.handmadeMarket.Authentication;
 
 import com.handmadeMarket.Role.EnumRole;
 import jakarta.validation.constraints.NotBlank;

@@ -1,6 +1,6 @@
 package com.handmadeMarket.Mapper;
 
-import com.handmadeMarket.Users.dto.RegisterUserDto;
+import com.handmadeMarket.Authentication.RegisterUserDto;
 import com.handmadeMarket.Users.Users;
 import com.handmadeMarket.Users.dto.UpdateUserDto;
 import com.handmadeMarket.Users.dto.UserResponseDto;
@@ -12,5 +12,5 @@ public interface UserMapper {
 
     Users toUsers(RegisterUserDto registerUserDto);
 
-    Users updateDtoToUsers(UpdateUserDto updateUserDto);
+    Users updateDtoToUsers(Users user, UpdateUserDto updateUserDto);
 }

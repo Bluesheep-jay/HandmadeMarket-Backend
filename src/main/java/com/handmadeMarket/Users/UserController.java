@@ -1,6 +1,7 @@
 package com.handmadeMarket.Users;
 
-import com.handmadeMarket.Users.dto.RegisterUserDto;
+import com.handmadeMarket.Product.Product;
+import com.handmadeMarket.Shop.Shop;
 import com.handmadeMarket.Users.dto.UpdateUserDto;
 import com.handmadeMarket.Users.dto.UserResponseDto;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +16,25 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping
-    public UserResponseDto register(@RequestBody RegisterUserDto registerUserDto){
-        System.out.println(registerUserDto.toString());
-        return userService.registerLocalUser(registerUserDto);
+
+
+    @GetMapping("/{id}")
+    public UserResponseDto getUserById(@PathVariable String id){
+        return userService.getById(id);
+    }
+    @GetMapping("/rank/{rankId}")
+    public long getUsersByRankId(@PathVariable String rankId) {
+        return userService.countUsersByRankId(rankId);
+    }
+
+    @GetMapping("/email/{email}")
+    public UserResponseDto getUserByEmail(@PathVariable String email){
+        return userService.getByEmail(email);
+    }
+
+    @GetMapping("wishlist/{id}")
+    public List<Product> getWishList(@PathVariable String id){
+        return userService.getWishlistProducts(id);
     }
 
     @GetMapping
@@ -26,10 +42,6 @@ public class UserController {
         return userService.getAll();
     }
 
-    @GetMapping("/{id}")
-    public UserResponseDto getUserById(@PathVariable String id){
-        return userService.getById(id);
-    }
     @PutMapping("/update-info/{id}")
     public UserResponseDto updateInfo(@PathVariable String id, @RequestBody UpdateUserDto updateUserDto){
         return userService.updateUserInfo(id, updateUserDto );
@@ -39,6 +51,17 @@ public class UserController {
     public UserResponseDto updatePoints(@PathVariable String id, @RequestBody UpdateUserDto updateUserDto){
         return userService.updatePoints(id, updateUserDto );
     }
+
+    @PutMapping("/update-wishlist/{id}")
+    public List<Product> updateWishList(@PathVariable String id, @RequestBody List<String> updatedWishList){
+        return userService.updateWishList(id, updatedWishList);
+    }
+
+    @PutMapping("/update-shop-list/{id}")
+    public List<Shop> updateFavouriteShopList(@PathVariable String id, @RequestBody List<String> updatedShopList){
+        return userService.updateFavouriteShopList(id, updatedShopList);
+    }
+
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable String id){

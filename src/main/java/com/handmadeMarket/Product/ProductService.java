@@ -7,6 +7,7 @@ import com.handmadeMarket.Shop.ShopService;
 import com.handmadeMarket.Users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,6 +47,10 @@ public class ProductService {
     public List<ProductResponseDto> getByCategoryId(String categoryId) {
         List<Product> products = productRepository.findByCategoryId(categoryId);
         return products.stream().map(productMapper::toProductResponseDto).collect(Collectors.toList());
+    }
+
+    public List<Product> getByIdList(List<String> idList) {
+        return productRepository.findByIdIn(idList);
     }
 
     public ProductResponseDto update(String id, Product updatedProduct) {

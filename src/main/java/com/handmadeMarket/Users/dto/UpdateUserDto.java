@@ -12,14 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UpdateUserDto {
     private String username;
-    private String password;
     private String email;
     private String avatarUrl;
-    private String enumRole;
     private String phoneNumber;
-
-    private String rankName;
-    private int rankNumber;
-    private int points;
-    private double rankDiscount;
 }

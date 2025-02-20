@@ -13,7 +13,7 @@ import java.util.Map;
 public class CreateProductDto {
     private String title;
     private String description;
-    private double basPrice;
+    private double basePrice;
     private List<String> imageList;
     private List<Map<String, Object>> optionList;
     private int quantity;

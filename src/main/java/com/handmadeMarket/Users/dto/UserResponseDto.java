@@ -21,11 +21,10 @@ public class UserResponseDto {
     private String avatarUrl;
     private String phoneNumber;
     private EnumRole enumRole;
-    private String rankName;
-    private int rankNumber;
-    private int points;
-    private double rankDiscount;
     private String shopId;
+    private String rankId;
     private List<String> addressIdList;
     private String cartId;
+    private List<String> wishList;
+    private List<String> favouriteShopList;
 }
