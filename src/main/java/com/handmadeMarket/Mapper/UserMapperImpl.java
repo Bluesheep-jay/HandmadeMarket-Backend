@@ -48,7 +48,6 @@ public class UserMapperImpl implements UserMapper {
             return null;
         }
         
-        exUser.setEmail( updateUserDto.getEmail() );
         exUser.setUsername( updateUserDto.getUsername() );
         exUser.setAvatarUrl( updateUserDto.getAvatarUrl() );
         exUser.setPhoneNumber( updateUserDto.getPhoneNumber() );

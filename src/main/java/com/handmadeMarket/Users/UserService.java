@@ -2,6 +2,8 @@ package com.handmadeMarket.Users;
 
 import com.handmadeMarket.Address.Address;
 import com.handmadeMarket.Authentication.JwtService;
+import com.handmadeMarket.Authentication.LoginDto;
+import com.handmadeMarket.Authentication.RegisterUserDto;
 import com.handmadeMarket.Cart.Cart;
 import com.handmadeMarket.Cart.CartService;
 import com.handmadeMarket.Exception.DuplicateResourcesException;
@@ -9,21 +11,11 @@ import com.handmadeMarket.Exception.ResourceNotFoundException;
 import com.handmadeMarket.Mapper.UserMapper;
 import com.handmadeMarket.Product.Product;
 import com.handmadeMarket.Product.ProductService;
-import com.handmadeMarket.Rank.Rank;
-import com.handmadeMarket.Rank.RankRepository;
-import com.handmadeMarket.Role.EnumRole;
-import com.handmadeMarket.Authentication.LoginDto;
-import com.handmadeMarket.Authentication.RegisterUserDto;
-import com.handmadeMarket.Shop.Shop;
-import com.handmadeMarket.Shop.ShopService;
 import com.handmadeMarket.Users.dto.UpdateUserDto;
 import com.handmadeMarket.Users.dto.UserResponseDto;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.parameters.P;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,19 +32,18 @@ public class UserService {
     private final AuthenticationManager authManager;
     private final JwtService jwtService;
     private final ProductService productService;
-    private final ShopService shopService;
 
     private final BCryptPasswordEncoder bEncoder = new BCryptPasswordEncoder(10);
+
     public UserService(UserRepository userRepository, UserMapper userMapper,
                        CartService cartService, AuthenticationManager authManager,
-                       JwtService jwtService, ProductService productService, ShopService shopService) {
+                       JwtService jwtService, ProductService productService) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.cartService = cartService;
         this.authManager = authManager;
         this.jwtService = jwtService;
         this.productService = productService;
-        this.shopService = shopService;
     }
 
     public UserResponseDto registerLocalUser(RegisterUserDto registerDto) {
@@ -62,7 +53,7 @@ public class UserService {
 
         Users newUser = userMapper.toUsers(registerDto);
         newUser.setPassword(bEncoder.encode(newUser.getPassword()));
-        Cart newCart =  cartService.create(new Cart());
+        Cart newCart = cartService.create(new Cart());
         newUser.setCartId(newCart.getId());
         return userMapper.toUserResponseDto(userRepository.save(newUser));
     }
@@ -71,7 +62,7 @@ public class UserService {
         Authentication authentication = authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword())
         );
-        if(authentication.isAuthenticated()) {
+        if (authentication.isAuthenticated()) {
             return jwtService.generateToken(loginDto.getEmail());
         }
         return "fail";
@@ -87,7 +78,7 @@ public class UserService {
 
     public UserResponseDto getByEmail(String email) {
         Users users = userRepository.findByEmail(email);
-        if(users == null) {
+        if (users == null) {
             throw new ResourceNotFoundException("User not found with email: " + email);
         }
         return userMapper.toUserResponseDto(users);
@@ -99,24 +90,26 @@ public class UserService {
         return productService.getByIdList(u.getWishList());
     }
 
-    public List<Shop> getFavouriteShopList(String id) {
-        Users u = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
-        return shopService.getByIdList(u.getFavouriteShopList());
+    public void addShopId(String userId, String shopId) {
+        Users u = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
+        u.setShopId(shopId);
+        userRepository.save(u);
     }
 
     public List<Product> updateWishList(String id, List<String> updatedWishList) {
         Users u = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
         u.setWishList(updatedWishList);
-         userMapper.toUserResponseDto(userRepository.save(u));
+        userMapper.toUserResponseDto(userRepository.save(u));
 
-        return  productService.getByIdList(u.getWishList());
+        return productService.getByIdList(u.getWishList());
     }
-    public List<Shop> updateFavouriteShopList(String id, List<String> updatedShopList) {
+
+    public void updateFavouriteShopList(String id, List<String> updatedShopList) {
         Users u = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
         u.setFavouriteShopList(updatedShopList);
         userMapper.toUserResponseDto(userRepository.save(u));
 
-        return shopService.getByIdList(u.getFavouriteShopList());
+        // note: this method doesn't need to return anything -> call the getByIdList method when needed.
     }
 
     public long countUsersByRankId(String rankId) {
@@ -133,7 +126,7 @@ public class UserService {
 
     public UserResponseDto updatePoints(String id, UpdateUserDto updateUserDto) {
         Users existingUser = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
-        Users u = userMapper.updateDtoToUsers(existingUser,updateUserDto);
+        Users u = userMapper.updateDtoToUsers(existingUser, updateUserDto);
         u.setId(id);
 
         return userMapper.toUserResponseDto(userRepository.save(u));
@@ -144,33 +137,33 @@ public class UserService {
         String userId = address.getAddressOfUserId();
         String addressId = address.getId();
         Optional<Users> existingUser = userRepository.findById(userId);
-        if(existingUser.isPresent()) {
+        if (existingUser.isPresent()) {
             Users user = existingUser.get();
-            if(!user.getAddressIdList().contains(addressId)){
+            if (!user.getAddressIdList().contains(addressId)) {
                 user.getAddressIdList().add(addressId);
-            }else{
-               throw new DuplicateResourcesException("Address already exists with id: " + addressId);
+            } else {
+                throw new DuplicateResourcesException("Address already exists with id: " + addressId);
             }
             userRepository.save(user);
-        }else{
+        } else {
             throw new ResourceNotFoundException("User not found with id: " + userId);
         }
 
     }
 
     @Transactional
-    public void deleteAddressIdFromAddressList(Address address){
+    public void deleteAddressIdFromAddressList(Address address) {
         Optional<Users> existingUser = userRepository.findById(address.getAddressOfUserId());
-        if(existingUser.isPresent()){
+        if (existingUser.isPresent()) {
             Users user = existingUser.get();
             String addressId = address.getId();
-            if(user.getAddressIdList().contains(addressId)){
+            if (user.getAddressIdList().contains(addressId)) {
                 user.getAddressIdList().remove(addressId);
-            }else{
+            } else {
                 throw new ResourceNotFoundException("Address not found with id: " + addressId);
             }
             userRepository.save(user);
-        }else {
+        } else {
             throw new ResourceNotFoundException("User not found with id: " + address.getAddressOfUserId());
         }
     }

@@ -21,7 +21,6 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public String login(@RequestBody LoginDto loginDto){
-        System.out.println("loginDto = " + loginDto);
         return userService.verify(loginDto);
     }
 }

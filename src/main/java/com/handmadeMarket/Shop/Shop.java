@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-import org.w3c.dom.stylesheets.LinkStyle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +23,42 @@ public class Shop {
 
     @Field("shop_description")
     private String shopDescription;
+
+    @Field("phone_number")
+    private String phoneNumber;
+
+    @Field("full_name")
+    private String fullName;
+
+    @Field("province_id")
+    private int provinceId;
+
+    @Field("district_id")
+    private int districtId;
+
+    @Field("ward_id")
+    private String wardId;
+
+    @Field("specific_address")
+    private String specificAddress;
+
+    @Field("business_type")
+    private String businessType;
+
+    @Field("tax_code")
+    private String taxCode;
+
+    @Field("id_number")
+    private String idNumber;
+
+    @Field("id_full_name")
+    private String idFullName;
+
+    @Field("id_front_image_url")
+    private String idFrontImageUrl;
+
+    @Field("id_back_image_url")
+    private String idBackImageUrl;
 
     @Field("shop_is_open")
     private boolean shopIsOpen = true;
