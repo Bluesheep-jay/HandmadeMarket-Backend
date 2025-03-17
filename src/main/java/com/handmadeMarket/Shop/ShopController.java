@@ -2,7 +2,6 @@ package com.handmadeMarket.Shop;
 
 import com.handmadeMarket.Product.Product;
 import com.handmadeMarket.Shop.dto.CreateShopDto;
-import com.handmadeMarket.Users.UserService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,14 +21,14 @@ public class ShopController {
         return shopService.addShop(shop);
     }
 
-    @GetMapping
-    public List<Shop> getAllShops() {
-        return shopService.getAllShops();
-    }
-
     @GetMapping("/{id}")
     public Shop getShopById(@PathVariable String id) {
         return shopService.getShopById(id);
+    }
+
+    @GetMapping
+    public List<Shop> getAllShops() {
+        return shopService.getAllShops();
     }
 
     @PutMapping("/active-status/{id}")
@@ -39,10 +38,11 @@ public class ShopController {
 
     @PutMapping("/info/{id}")
     public Shop updateShopInfo(@PathVariable String id, @RequestBody Shop shop) {
+        System.out.println("shop: " + shop);
         return shopService.updateInfo(id, shop);
     }
 
-// PRODUCT ----------------------
+    // PRODUCT ----------------------
     @PostMapping("/add-product")
     public Shop addProduct(@RequestBody Product createProduct) {
         return shopService.updateProductList(createProduct);

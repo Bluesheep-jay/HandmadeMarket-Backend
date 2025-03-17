@@ -19,6 +19,9 @@ public class ShopMapperImpl implements ShopMapper {
         shop.setProvinceId( createShopDto.getProvinceId() );
         shop.setDistrictId( createShopDto.getDistrictId() );
         shop.setWardId( createShopDto.getWardId() );
+        shop.setProvinceName( createShopDto.getProvinceName() );
+        shop.setDistrictName( createShopDto.getDistrictName() );
+        shop.setWardName( createShopDto.getWardName() );
         shop.setSpecificAddress( createShopDto.getSpecificAddress() );
         shop.setBusinessType( createShopDto.getBusinessType() );
         shop.setTaxCode( createShopDto.getTaxCode() );

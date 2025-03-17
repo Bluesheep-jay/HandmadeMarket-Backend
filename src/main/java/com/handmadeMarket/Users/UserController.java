@@ -1,5 +1,6 @@
 package com.handmadeMarket.Users;
 
+import com.handmadeMarket.Address.Address;
 import com.handmadeMarket.Product.Product;
 import com.handmadeMarket.Users.dto.UpdateUserDto;
 import com.handmadeMarket.Users.dto.UserResponseDto;
@@ -35,6 +36,7 @@ public class UserController {
     public List<Product> getWishList(@PathVariable String id) {
         return userService.getWishlistProducts(id);
     }
+
 
     @GetMapping
     public List<UserResponseDto> getAll() {

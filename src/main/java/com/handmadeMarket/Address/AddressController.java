@@ -1,5 +1,6 @@
 package com.handmadeMarket.Address;
 
+import com.handmadeMarket.Address.dto.CreateAddressDto;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,9 +14,9 @@ public class AddressController {
         this.addressService = addressService;
     }
 
-    @GetMapping
-    public List<Address> getAddresses() {
-        return addressService.getAll();
+    @GetMapping("/user/{userId}")
+    public List<Address> getAddressListByUserId(@PathVariable String userId) {
+        return addressService.getAddressListByUserId(userId);
     }
 
     @GetMapping("/{id}")
@@ -23,8 +24,15 @@ public class AddressController {
         return addressService.getById(id);
     }
 
-    @PostMapping("")
-    public Address createAddress(@RequestBody Address address) {
+    @GetMapping
+    public List<Address> getAddresses() {
+        return addressService.getAll();
+    }
+
+    @PostMapping
+    public Address createAddress(@RequestBody CreateAddressDto address) {
+        System.out.println(address);
+
         return addressService.create(address);
     }
 

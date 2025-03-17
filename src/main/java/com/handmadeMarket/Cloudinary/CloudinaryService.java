@@ -22,7 +22,9 @@ public class CloudinaryService {
         return uploadResult.get("secure_url").toString();
     }
 
-    public Map uploadVideo(MultipartFile file, String folderName) throws IOException {
-        return cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap("resource_type", "video", "folder", folderName));
+    public String uploadVideo(MultipartFile file) throws IOException {
+        Map uploadResult = cloudinary.uploader().upload(file.getBytes(),
+                ObjectUtils.asMap("resource_type", "video"));
+        return  uploadResult.get("secure_url").toString();
     }
 }

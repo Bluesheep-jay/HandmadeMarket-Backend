@@ -14,9 +14,20 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class Address {
     @Id
     private String id;
-    private String province;
-    private String district;
-    private String ward;
+
+    @Field("province_id")
+    private int provinceId;
+    @Field("district_id")
+    private int districtId;
+    @Field("ward_id")
+    private String wardId;
+
+    @Field("province_name")
+    private String provinceName;
+    @Field("district_name")
+    private String districtName;
+    @Field("ward_name")
+    private String wardName;
 
     @Field("specific_address")
     private String specificAddress;

@@ -9,7 +9,5 @@ import org.springframework.stereotype.Component;
 
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
-    Product toProduct(CreateProductDto createProductDto);
-
-    ProductResponseDto toProductResponseDto(Product product);
+//    Product toProduct(CreateProductDto createProductDto);
 }

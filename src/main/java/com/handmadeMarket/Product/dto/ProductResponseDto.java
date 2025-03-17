@@ -23,7 +23,8 @@ public class ProductResponseDto {
     private String height;
     private String width;
     private String weight;
-    private String categoryId;
+    private String categoryLevel2Id;
+    private double rating;
     private String shopId;
 
 }

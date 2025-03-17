@@ -1,8 +1,10 @@
 package com.handmadeMarket.Product.dto;
 
+import com.handmadeMarket.Product.Variation;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.List;
 import java.util.Map;
@@ -11,14 +13,19 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateProductDto {
-    private String title;
-    private String description;
-    private double basePrice;
+    private String productTitle;
+    private String categoryLevel2Id;
+    private String productDescription;
+    private String personalizationDescription;
     private List<String> imageList;
-    private List<Map<String, Object>> optionList;
-    private int quantity;
-    private String height;
-    private String width;
+    private double basePrice;
+    private int baseQuantity;
+    private List<Variation> variationList;
     private String weight;
-    private String categoryId;
+    private String length;
+    private String width;
+    private String height;
+    private double rating = 0.0;
+    private String shopId;
+
 }

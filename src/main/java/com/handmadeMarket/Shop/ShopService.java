@@ -60,15 +60,11 @@ public class ShopService {
     }
 
     public Shop updateInfo(String id, Shop updatedshop) {
-        Optional<Shop> optionalShop = shopRepository.findById(id);
-        if (optionalShop.isPresent()) {
-            Shop shopToUpdate = optionalShop.get();
-            shopToUpdate.setShopName(updatedshop.getShopName());
-            shopToUpdate.setShopDescription(updatedshop.getShopDescription());
-            return shopRepository.save(shopToUpdate);
-        } else {
-            throw new ResourceNotFoundException("shop not found with id " + id);
-        }
+        shopRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("shop not found with id " + id)
+        );
+        Shop shop = new Shop(updatedshop);
+        return shopRepository.save(shop);
     }
 
 //    public Shop updateShopRating(String id, double rating) {
@@ -82,7 +78,7 @@ public class ShopService {
 //        }
 //    }
 
-///  ========== PRODUCT ===========
+    ///  ========== PRODUCT ===========
     @Transactional
     public Shop updateProductList(Product product) {
         Product createdProduct = productService.create(product);

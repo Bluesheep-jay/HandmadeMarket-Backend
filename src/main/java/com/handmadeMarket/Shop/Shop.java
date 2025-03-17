@@ -24,6 +24,9 @@ public class Shop {
     @Field("shop_description")
     private String shopDescription;
 
+    @Field("shop_avatar_url")
+    private String shopAvatarUrl;
+
     @Field("phone_number")
     private String phoneNumber;
 
@@ -38,6 +41,15 @@ public class Shop {
 
     @Field("ward_id")
     private String wardId;
+
+    @Field("province_name")
+    private String provinceName;
+
+    @Field("district_name")
+    private String districtName;
+
+    @Field("ward_name")
+    private String wardName;
 
     @Field("specific_address")
     private String specificAddress;
@@ -74,4 +86,31 @@ public class Shop {
 
     @Field("product_id_list")
     private List<String> productIdList = new ArrayList<>();
+
+    public Shop(Shop shop){
+        this.id = shop.getId();
+        this.shopName = shop.getShopName();
+        this.shopDescription = shop.getShopDescription();
+        this.shopAvatarUrl = shop.getShopAvatarUrl();
+        this.phoneNumber = shop.getPhoneNumber();
+        this.fullName = shop.getFullName();
+        this.provinceId = shop.getProvinceId();
+        this.districtId = shop.getDistrictId();
+        this.wardId = shop.getWardId();
+        this.provinceName = shop.getProvinceName();
+        this.districtName = shop.getDistrictName();
+        this.wardName = shop.getWardName();
+        this.specificAddress = shop.getSpecificAddress();
+        this.businessType = shop.getBusinessType();
+        this.taxCode = shop.getTaxCode();
+        this.idNumber = shop.getIdNumber();
+        this.idFullName = shop.getIdFullName();
+        this.idFrontImageUrl = shop.getIdFrontImageUrl();
+        this.idBackImageUrl = shop.getIdBackImageUrl();
+        this.shopIsOpen = shop.isShopIsOpen();
+        this.shopIsActive = shop.isShopIsActive();
+        this.shopRating = shop.getShopRating();
+        this.userId = shop.getUserId();
+        this.productIdList = shop.getProductIdList();
+    }
 }

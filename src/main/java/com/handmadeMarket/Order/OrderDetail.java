@@ -1,9 +1,13 @@
 package com.handmadeMarket.Order;
 
-import org.springframework.data.mongodb.core.mapping.Field;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class OrderDetail {
-    @Field("product_id")
     private String productId;
     private int quantity;
     private double price;

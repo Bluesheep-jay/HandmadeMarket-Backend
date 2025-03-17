@@ -1,6 +1,7 @@
 package com.handmadeMarket.Cart;
 
 import com.handmadeMarket.Cart.CartItem.CartItem;
+import com.handmadeMarket.Cart.dto.CartResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public class CartController {
     }
 
     @GetMapping("/{cartId}")
-    public Cart getCartById(@PathVariable String cartId) {
+    public CartResponse getCartById(@PathVariable String cartId) {
         return cartService.getById(cartId);
     }
 
@@ -33,14 +34,19 @@ public class CartController {
         return cartService.addItemIntoCart(cartId, cartItem);
     }
 
-    @PutMapping("/removeItem/{cartId}")
-    public Cart removeItem(@PathVariable String cartId, @RequestBody CartItem itemToRemove) {
-        return cartService.removeItemFromCart(cartId, itemToRemove);
+    @PutMapping("/removeItem/{cartId}/{productId}")
+    public Cart removeItem(@PathVariable String cartId, @PathVariable String productId) {
+        return cartService.removeItemFromCart(cartId, productId);
     }
 
     @PutMapping("/updateQuantity/{cartId}")
     public Cart updateItemQuantityInCart(@PathVariable String cartId, @RequestBody Cart cart) {
         return cartService.updateItemQuantityInCart(cartId, cart);
+    }
+
+    @PutMapping("/clearCart/{cartId}")
+    public Cart clearCart(@PathVariable String cartId) {
+        return cartService.clearCart(cartId);
     }
 
 }

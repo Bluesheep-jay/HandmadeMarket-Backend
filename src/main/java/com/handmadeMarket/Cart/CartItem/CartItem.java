@@ -18,7 +18,7 @@ public class CartItem {
     private int quantity;
 
     @Field("selected_options")
-    private Map<String, Object> selectedOptions;
+    private Map<String, String> selectedOptions;
 
     @Field("subtotal_price")
     private double subPrice;

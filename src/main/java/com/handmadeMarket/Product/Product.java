@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
+import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -17,26 +20,42 @@ import java.util.Map;
 public class Product {
     @Id
     private String id;
+
+    @TextIndexed(weight = 3)
     @Field(value = "product_title")
     private String productTitle;
+
+    @Field(value = "category_level_2_id")
+    private String categoryLevel2Id;
+
     @Field(value = "product_description")
     private String productDescription;
 
-    @Field(value = "base_price")
-    private double basePrice;
+    @Field("personalization_description")
+    private String personalizationDescription;
 
     @Field(value = "image_list")
     private List<String> imageList;
 
-    @Field(value = "option_list")
-    private List<Map<String, Object>> optionList;
+    @Field(value= "video_url")
+    private String videoUrl;
 
-    private int quantity;
-    private String height;
-    private String width;
+    @Field(value = "base_price")
+    private double basePrice;
+
+    private int baseQuantity;
+
+    @Field(value = "variation_list")
+    private List<Variation> variationList;
+//    [ { name: "size",  options : ["S", "M", "L"], price: 1000, stock: 10},
+//      { name: "color", options: ["red", "blue", "green"]}, price: 1000, stock: 10 ]
+
     private String weight;
-    @Field(value = "category_id")
-    private String categoryId;
+    private String length;
+    private String width;
+    private String height;
+
+    private double rating = 0.0;
 
     @Field("shop_id")
     private String shopId;

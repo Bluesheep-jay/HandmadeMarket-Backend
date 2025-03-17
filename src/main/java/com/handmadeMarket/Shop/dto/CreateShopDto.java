@@ -20,6 +20,9 @@ public class CreateShopDto {
     private int provinceId;
     private int districtId;
     private String wardId;
+    private String provinceName;
+    private String districtName;
+    private String wardName;
     private String specificAddress;
     private String businessType;
     private String taxCode;
