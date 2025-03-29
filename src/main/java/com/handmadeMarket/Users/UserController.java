@@ -32,7 +32,7 @@ public class UserController {
         return userService.getByEmail(email);
     }
 
-    @GetMapping("wishlist/{id}")
+    @GetMapping("/wishlist/{id}")
     public List<Product> getWishList(@PathVariable String id) {
         return userService.getWishlistProducts(id);
     }
@@ -54,9 +54,9 @@ public class UserController {
         return userService.updatePoints(id, updateUserDto);
     }
 
-    @PutMapping("/update-wishlist/{id}")
-    public List<Product> updateWishList(@PathVariable String id, @RequestBody List<String> updatedWishList) {
-        return userService.updateWishList(id, updatedWishList);
+    @PutMapping("/update-wishlist/{userId}/{productId}")
+    public List<String> updateWishList(@PathVariable String userId, @PathVariable String productId) {
+        return userService.updateWishList(userId, productId);
     }
 
     @PutMapping("/update-shop-list/{id}")

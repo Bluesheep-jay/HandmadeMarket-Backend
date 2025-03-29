@@ -23,6 +23,9 @@ public class CartItemResponse {
     private List<Variation> variationList;
     private Map<String, String> selectedOptions;
     private double subPrice;
+    private String personalizationDescriptionOfProduct;
+    private String personalizationOfClient;
+    private Boolean personalizationRequired;
     private int provinceId;
     private int districtId;
     private String wardId;

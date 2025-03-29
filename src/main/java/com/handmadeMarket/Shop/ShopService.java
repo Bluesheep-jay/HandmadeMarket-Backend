@@ -79,6 +79,11 @@ public class ShopService {
 //    }
 
     ///  ========== PRODUCT ===========
+    public List<Product> getProductsByShopId(String shopId) {
+        Shop existingShop = getShopById(shopId);
+        return productService.getByProductIdList(existingShop.getProductIdList());
+    }
+
     @Transactional
     public Shop updateProductList(Product product) {
         Product createdProduct = productService.create(product);

@@ -1,19 +1,21 @@
-package com.handmadeMarket.Order;
+package com.handmadeMarket.Order.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Map;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderDetail {
+public class OrderDetailWithProduct {
     private String productId;
     private int quantity;
     private double price;
     private Map<String, String> selectedOptions;
-    private String personalizationOfClient;
-    private Boolean personalizationRequired;
+    private String productTitle;
+    private String productDescription;
+    private List<String> imageList;
 }

@@ -1,12 +1,15 @@
 package com.handmadeMarket.Shop;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,6 +84,11 @@ public class Shop {
     @Field("shop_rating")
     private double shopRating = 0.0;
 
+    @Field("shop_created_at")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
+    @CreatedDate
+    private Instant shopCreatedAt;
+
     @Field("user_id")
     private String userId;
 
@@ -88,7 +96,7 @@ public class Shop {
     private List<String> productIdList = new ArrayList<>();
 
     public Shop(Shop shop){
-        this.id = shop.getId();
+        this.id = shop.getId(); 
         this.shopName = shop.getShopName();
         this.shopDescription = shop.getShopDescription();
         this.shopAvatarUrl = shop.getShopAvatarUrl();

@@ -1,4 +1,4 @@
-package com.handmadeMarket.Category;
+package com.handmadeMarket.CommissionRate;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,13 +11,16 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryLevel1 {
+public class CommissionRate {
     @Id
     private String id;
 
-    @Field("category_level_1_name")
-    private String categoryLevel1Name;
+    @Field("min_price")
+    private int minPrice;
 
-    @Field("category_level_1_image_url")
-    private String categoryLevel1ImageUrl;
+    @Field("max_price")
+    private int maxPrice;
+
+    @Field("commission_rate")
+    private double commissionRate;
 }

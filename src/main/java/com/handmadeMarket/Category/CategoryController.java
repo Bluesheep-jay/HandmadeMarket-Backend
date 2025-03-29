@@ -12,44 +12,45 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @PostMapping("/level1")
-    public CategoryLevel1 create(@RequestBody CategoryLevel1 newCategoryLevel2){
-        return categoryService.createLevel1(newCategoryLevel2);
+
+    @PostMapping()
+    public Category create(@RequestBody Category newCategory){
+        return categoryService.create(newCategory);
     }
 
-    @GetMapping("/level1")
-    public List<CategoryLevel1> getAllLevel1(){
-        return categoryService.getAllLevel1();
+    @GetMapping("/roots")
+    public List<Category> getRootCategories() {
+        return categoryService.getRootCategories();
     }
 
-/// ------ LEVEL 222222222 -----
-    @PostMapping("/level2")
-    public CategoryLevel2 create(@RequestBody CategoryLevel2 newCategoryLevel2){
-        return categoryService.createLevel2(newCategoryLevel2);
+    @GetMapping("/subcategories/{parentId}")
+    public List<Category> getSubCategories(@PathVariable String parentId) {
+        return categoryService.getSubCategories(parentId);
     }
 
-    @GetMapping("/level2-by-level1/{level1Id}")
-    public List<CategoryLevel2> getAllLevel2ByLevel1(@PathVariable String level1Id){
-        return categoryService.getAllLevel2ByLevel1(level1Id);
+    @GetMapping("/all-parents/{categoryId}")
+    public List<Category> getParentCategories(@PathVariable String categoryId) {
+        return categoryService.findAllParentCategories(categoryId);
     }
 
-    @GetMapping("/level2")
-    public List<CategoryLevel2> getAll(){
-        return categoryService.getAllLevel2();
+
+    @GetMapping()
+    public List<Category> getAll(){
+        return categoryService.getAll();
     }
 
-    @GetMapping("/level2-id/{id}")
-    public CategoryLevel2 getById(@PathVariable String id){
-        return categoryService.getByIdLevel2(id);
+    @GetMapping("/{id}")
+    public Category getById(@PathVariable String id){
+        return categoryService.getById(id);
     }
 
-    @PutMapping("/level2/{id}")
-    public CategoryLevel2 update(@PathVariable String id, @RequestBody CategoryLevel2 updatedCategoryLevel2){
-        return categoryService.updateLevel2(id, updatedCategoryLevel2);
+    @PutMapping("/{id}")
+    public Category update(@PathVariable String id, @RequestBody Category updatedCategory){
+        return categoryService.update(id, updatedCategory);
     }
 
-    @DeleteMapping("/level2/{id}")
+    @DeleteMapping("/{id}")
     public void delete(@PathVariable String id){
-        categoryService.deleteLevel2(id);
+        categoryService.delete(id);
     }
 }

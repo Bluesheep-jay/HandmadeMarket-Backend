@@ -1,6 +1,5 @@
 package com.handmadeMarket.Product;
 
-import com.handmadeMarket.Product.dto.ProductResponseDto;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,13 +9,14 @@ import java.util.Set;
 @RequestMapping("/products")
 public class ProductController {
     private final ProductService productService;
-    public ProductController( ProductService productService) {
+
+    public ProductController(ProductService productService) {
         this.productService = productService;
     }
 
 
     @GetMapping("/{id}")
-    public Product getById(@PathVariable String id){
+    public Product getById(@PathVariable String id) {
         return productService.getById(id);
     }
 
@@ -25,33 +25,33 @@ public class ProductController {
         return productService.getProductBySearchText(q);
     }
 
-    @GetMapping("/by-category-level-1/{categoryLevel1Id}")
-    public List<Product> getProductsByCategoryLevel1Id(@PathVariable String categoryLevel1Id) {
-        return productService.getProductsByCategoryLevel1Id(categoryLevel1Id);
+    @GetMapping("/by-root-category/{rootCategoryId}")
+    public List<Product> getProductsByRootCategory(@PathVariable String rootCategoryId) {
+        return productService.getProductsByRootCategoryId(rootCategoryId);
     }
 
-    @GetMapping("/by-category-level-2/{categoryLevel2Id}")
-    public List<Product> getByCategoryLevel2Id(@PathVariable String categoryLevel2Id){
-        return productService.getByCategoryLevel2Id(categoryLevel2Id);
+
+    @PostMapping("/by-id-list")
+    public List<Product> getProductsByIdList(@RequestBody List<String> idList) {
+        return productService.getByIdList(idList);
     }
+
 
     @GetMapping
-    public List<Product> getAll(){
+    public List<Product> getAll() {
         return productService.getAll();
     }
 
 
-
-    @PutMapping("/{id}")
-    public Product update(@PathVariable String id, @RequestBody Product product){
-        return productService.update(id, product);
+    @PutMapping("/update-product/{productId}")
+    public Product update(@PathVariable String productId, @RequestBody Product product) {
+        return productService.update(productId, product);
     }
 
     @DeleteMapping("/")
-    public void delete(@RequestParam String productId){
-        productService.delete( productId);
+    public void delete(@RequestParam String productId) {
+        productService.delete(productId);
     }
-
 
 
 }

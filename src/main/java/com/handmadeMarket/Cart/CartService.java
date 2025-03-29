@@ -33,7 +33,6 @@ public class CartService {
     }
 
     public CartResponse getById(String id) {
-        // Lấy Cart từ MongoDB
         Cart cart = cartRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Cart not found with id: " + id)
         );
@@ -57,6 +56,9 @@ public class CartService {
                     product.getVariationList(),
                     item.getSelectedOptions(),
                     item.getSubPrice(),
+                    product.getPersonalizationDescription(),
+                    item.getPersonalizationOfClient(),
+                    item.getPersonalizationRequired(),
                     shop.getProvinceId(),
                     shop.getDistrictId(),
                     shop.getWardId()

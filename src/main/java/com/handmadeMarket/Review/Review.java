@@ -1,12 +1,13 @@
 package com.handmadeMarket.Review;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.util.Date;
+import java.time.Instant;
 
 @Data
 @AllArgsConstructor
@@ -21,13 +22,20 @@ public class Review {
     @Field("review_comment")
     private String reviewComment;
 
+    @Field("is_review_edited")
+    private boolean isReviewEdited = false;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
     @Field("review_created_date")
-    private Date reviewCreatedDate;
+    private Instant reviewCreatedDate;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
     @Field("review_updated_date")
-    private Date reviewUpdatedDate;
+    private Instant reviewUpdatedDate;
 
-    @Field("product_id")
-    private String productId;
+    @Field("review_user_id")
+    private String reviewUserId;
 
+    @Field("review_product_id")
+    private String reviewProductId;
 }

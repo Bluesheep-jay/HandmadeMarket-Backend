@@ -15,22 +15,18 @@ import java.util.Map;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryLevel2 {
+public class Category {
 
     @Id
     private String id;
 
     @TextIndexed(weight = 3)
-    @Field(value = "category_level_2_name")
-    private String categoryLevel2Name;
+    @Field(value = "category_name")
+    private String categoryName;
 
-    @Field(value = "attribute_list")
-    private List<Map<String, Object>> attributeList;
+    @Field("category_parent_id")
+    private String categoryParentId;
 
-    @Field("category_level_2_image_url")
-    private String categoryLevel2ImageUrl;
-
-    @Field(value = "category_level_1_id")
-    private String categoryLevel1Id;
-
+    @Field("category_image_url")
+    private String categoryImageUrl;
 }

@@ -1,8 +1,9 @@
 package com.handmadeMarket.Product;
 
-import com.handmadeMarket.Category.CategoryLevel2;
-import com.handmadeMarket.Category.CategoryLevel2Repository;
+import com.handmadeMarket.Category.Category;
+import com.handmadeMarket.Category.CategoryService;
 import com.handmadeMarket.Exception.ResourceNotFoundException;
+import com.handmadeMarket.Review.Review;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -13,20 +14,19 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
-    private final CategoryLevel2Repository categoryLevel2Repository;
+    private final CategoryService categoryService;
     private final MongoTemplate mongoTemplate;
 
     public ProductService(ProductRepository productRepository,
-                          CategoryLevel2Repository categoryLevel2Repository,
+                          CategoryService categoryService,
                           MongoTemplate mongoTemplate) {
         this.productRepository = productRepository;
-        this.categoryLevel2Repository = categoryLevel2Repository;
         this.mongoTemplate = mongoTemplate;
+        this.categoryService = categoryService;
     }
 
     @Transactional
@@ -34,16 +34,11 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    public List<Product> getProductsByCategoryLevel1Id(String categoryLevel1Id) {
-        List<CategoryLevel2> categoryLevel2List = categoryLevel2Repository.findByCategoryLevel1Id(categoryLevel1Id);
 
-        // Trích xuất danh sách categoryLevel2Id
-        List<String> categoryLevel2Ids = categoryLevel2List.stream()
-                .map(CategoryLevel2::getId)
-                .collect(Collectors.toList());
-
-        // Truy vấn danh sách sản phẩm theo danh sách categoryLevel2Id
-        return productRepository.findByCategoryLevel2Ids(categoryLevel2Ids);
+    public List<Product> getProductsByRootCategoryId(String rootCategoryId) {
+        List<String> allCategoryIds = new ArrayList<>(
+                categoryService.getAllCategoryIdsByRootCategoryId(rootCategoryId));
+        return productRepository.findByCategoryIdIn(allCategoryIds);
     }
 
     public Set<Product> getProductBySearchText(String keyword) {
@@ -78,6 +73,7 @@ public class ProductService {
         return suggestions;
     }
 
+
     public List<Product> getAll() {
         return productRepository.findAll();
     }
@@ -88,8 +84,8 @@ public class ProductService {
         );
     }
 
-    public List<Product> getByCategoryLevel2Id(String categoryId) {
-        return productRepository.findByCategoryLevel2Id(categoryId);
+    public List<Product> getByProductIdList(List<String> productIds) {
+        return productRepository.findAllById(productIds);
     }
 
     public List<Product> getByIdList(List<String> idList) {
@@ -100,6 +96,21 @@ public class ProductService {
         productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product with Id: " + id + " not found"));
         updatedProduct.setId(id);
         return productRepository.save(updatedProduct);
+    }
+
+    public Product updateRating(String id, int rating, List<Review> reviews) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product with Id: " + id + " not found"));
+
+        double newAverageRating;
+        if (reviews.isEmpty()) {
+            newAverageRating = rating;
+        } else {
+            double totalRating = reviews.stream().mapToInt(Review::getReviewRating).sum() + rating;
+            newAverageRating = totalRating / (reviews.size() + 1);
+        }
+        product.setRating(newAverageRating);
+        return productRepository.save(product);
     }
 
     public Product delete(String productId) {

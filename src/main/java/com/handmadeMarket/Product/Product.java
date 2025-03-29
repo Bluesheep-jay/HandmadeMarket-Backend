@@ -25,8 +25,8 @@ public class Product {
     @Field(value = "product_title")
     private String productTitle;
 
-    @Field(value = "category_level_2_id")
-    private String categoryLevel2Id;
+    @Field(value = "category_id")
+    private String categoryId;
 
     @Field(value = "product_description")
     private String productDescription;
@@ -43,6 +43,7 @@ public class Product {
     @Field(value = "base_price")
     private double basePrice;
 
+    @Field(value = "base_quantity")
     private int baseQuantity;
 
     @Field(value = "variation_list")

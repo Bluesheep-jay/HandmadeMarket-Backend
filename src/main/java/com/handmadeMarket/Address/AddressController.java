@@ -31,7 +31,6 @@ public class AddressController {
 
     @PostMapping
     public Address createAddress(@RequestBody CreateAddressDto address) {
-        System.out.println(address);
 
         return addressService.create(address);
     }

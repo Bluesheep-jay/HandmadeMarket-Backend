@@ -26,11 +26,18 @@ public class ShopController {
         return shopService.getShopById(id);
     }
 
+
+
+    @GetMapping("/product-list/by-shop-id/{shopId}")
+    public List<Product> getProductListByShopId(@PathVariable String shopId) {
+        return shopService.getProductsByShopId(shopId);
+    }
+
+
     @GetMapping
     public List<Shop> getAllShops() {
         return shopService.getAllShops();
     }
-
     @PutMapping("/active-status/{id}")
     public Shop updateShopStatus(@PathVariable String id, @RequestBody Map<String, Boolean> isActive) {
         return shopService.updateActiveStatus(id, isActive.get("isActive"));

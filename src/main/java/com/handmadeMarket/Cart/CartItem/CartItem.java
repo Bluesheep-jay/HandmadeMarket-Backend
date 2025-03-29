@@ -22,4 +22,10 @@ public class CartItem {
 
     @Field("subtotal_price")
     private double subPrice;
+
+    @Field("personalization_of_client")
+    private String personalizationOfClient;
+
+    @Field("personalization_required")
+    private Boolean personalizationRequired;
 }

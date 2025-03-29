@@ -96,12 +96,14 @@ public class UserService {
         userRepository.save(u);
     }
 
-    public List<Product> updateWishList(String id, List<String> updatedWishList) {
-        Users u = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
-        u.setWishList(updatedWishList);
-        userMapper.toUserResponseDto(userRepository.save(u));
+    public List<String> updateWishList(String userId, String productId) {
+        Users u = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
+        if(!u.getWishList().contains(productId)){
+            u.getWishList().add(productId);
+            userRepository.save(u);
+        }
 
-        return productService.getByIdList(u.getWishList());
+        return u.getWishList();
     }
 
     public void updateFavouriteShopList(String id, List<String> updatedShopList) {
