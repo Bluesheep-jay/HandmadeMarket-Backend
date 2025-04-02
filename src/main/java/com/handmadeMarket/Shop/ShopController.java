@@ -16,6 +16,14 @@ public class ShopController {
         this.shopService = shopService;
     }
 
+    //    @PostMapping
+//    public Shop addShop(@RequestParam("idFrontImage") MultipartFile idFrontImage,
+//                        @RequestParam("idBackImage") MultipartFile idBackImage,
+//                        @RequestParam("shop") String shopJson) throws IOException, ExecutionException, InterruptedException {
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        CreateShopDto shop = objectMapper.readValue(shopJson, CreateShopDto.class);
+//        return shopService.addShop(shop, idFrontImage, idBackImage);
+//    }
     @PostMapping
     public Shop addShop(@RequestBody CreateShopDto shop) {
         return shopService.addShop(shop);
@@ -25,7 +33,6 @@ public class ShopController {
     public Shop getShopById(@PathVariable String id) {
         return shopService.getShopById(id);
     }
-
 
 
     @GetMapping("/product-list/by-shop-id/{shopId}")
@@ -38,6 +45,7 @@ public class ShopController {
     public List<Shop> getAllShops() {
         return shopService.getAllShops();
     }
+
     @PutMapping("/active-status/{id}")
     public Shop updateShopStatus(@PathVariable String id, @RequestBody Map<String, Boolean> isActive) {
         return shopService.updateActiveStatus(id, isActive.get("isActive"));

@@ -3,11 +3,11 @@ package com.handmadeMarket.Review;
 import com.handmadeMarket.Product.ProductService;
 import com.handmadeMarket.Review.dto.ReviewResponseDTO;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.*;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.ConvertOperators;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -37,6 +37,9 @@ public class ReviewService {
         return reviewRepository.save(review);
     }
 
+    public void deleteReview(String id) {
+        reviewRepository.deleteById(id);
+    }
 
     public List<ReviewResponseDTO> getReviewsByProductId(String productId) {
         Aggregation aggregation = Aggregation.newAggregation(

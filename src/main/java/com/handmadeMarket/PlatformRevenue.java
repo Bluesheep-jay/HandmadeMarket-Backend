@@ -1,4 +1,4 @@
-package com.handmadeMarket.CommissionRate;
+package com.handmadeMarket;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,19 +7,17 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+@Document
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommissionRate {
+public class PlatformRevenue {
     @Id
     private String id;
 
-    @Field("min_price")
-    private int minPrice;
+    @Field("month")
+    private String month;
 
-    @Field("max_price")
-    private int maxPrice;
-
-    @Field("commission_rate")
-    private double commissionRate;
+    @Field("total_platform_revenue")
+    private double totalPlatformRevenue;
 }

@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/upload")
@@ -17,8 +18,9 @@ public class CloudinaryController {
     }
 
     @PostMapping("/image")
-    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) throws IOException {
-        return ResponseEntity.ok(cloudinaryService.uploadFile(file));
+    public CompletableFuture<String> uploadImage(@RequestParam("file") MultipartFile file) throws IOException {
+        System.out.println("file: " + "=======================");
+        return cloudinaryService.uploadFile(file);
     }
 
     @PostMapping("/video")

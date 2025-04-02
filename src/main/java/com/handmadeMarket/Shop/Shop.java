@@ -95,6 +95,7 @@ public class Shop {
     @Field("product_id_list")
     private List<String> productIdList = new ArrayList<>();
 
+
     public Shop(Shop shop){
         this.id = shop.getId(); 
         this.shopName = shop.getShopName();

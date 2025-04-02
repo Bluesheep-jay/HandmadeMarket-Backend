@@ -34,10 +34,11 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request
                         -> request
-                        .requestMatchers("/register", "/login", "/categories/**",
-                                "/products/**", "/search-suggestions",
-                                "/shops/**", "/carts/**", "/reviews/**").permitAll()
-                        .anyRequest().authenticated())
+//                        .requestMatchers("/register", "/login", "/categories/**",
+//                                "/products/**", "/search-suggestions",
+//                                "/shops/**", "/carts/**", "/reviews/**").permitAll()
+//                        .anyRequest().authenticated())
+                        .anyRequest().permitAll())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

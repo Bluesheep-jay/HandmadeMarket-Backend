@@ -60,4 +60,7 @@ public class Product {
 
     @Field("shop_id")
     private String shopId;
+
+    @Field("approved")
+    private boolean approved = false;
 }

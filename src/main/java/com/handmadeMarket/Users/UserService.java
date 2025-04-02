@@ -72,6 +72,7 @@ public class UserService {
         return userRepository.findAll().stream().map(userMapper::toUserResponseDto).collect(Collectors.toList());
     }
 
+
     public UserResponseDto getById(String id) {
         return userMapper.toUserResponseDto(userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id)));
     }
@@ -174,6 +175,21 @@ public class UserService {
         userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
         userRepository.deleteById(id);
     }
+
+
+    public List<Users> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public Users updateUser(String id, Users user) {
+        Users existingUser = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+        existingUser.setUsername(user.getUsername());
+        existingUser.setEmail(user.getEmail());
+        existingUser.setEnumRole(user.getEnumRole());
+        // Update other fields as necessary
+        return userRepository.save(existingUser);
+    }
+
 
 
 }

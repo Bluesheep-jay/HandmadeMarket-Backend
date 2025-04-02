@@ -120,4 +120,15 @@ public class ProductService {
         return product;
     }
 
+
+    public Product approveProduct(String id) {
+        Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+        product.setApproved(true);
+        return productRepository.save(product);
+    }
+
+    public void deleteProduct(String id) {
+        productRepository.deleteById(id);
+    }
+
 }

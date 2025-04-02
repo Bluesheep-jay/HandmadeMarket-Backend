@@ -18,6 +18,12 @@ public enum EnumRole {
         throw new IllegalArgumentException("Invalid role: " + value);
     }
 
+    /**
+     * Convert the EnumRole to a String value.
+     *
+     * @return The string representation of the enum constant.
+     */
+
     @JsonValue
     public String toValue() {
         return this.name();
