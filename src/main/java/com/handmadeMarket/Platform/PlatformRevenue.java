@@ -1,4 +1,4 @@
-package com.handmadeMarket;
+package com.handmadeMarket.Platform;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

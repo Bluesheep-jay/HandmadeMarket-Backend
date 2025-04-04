@@ -148,6 +148,7 @@ public class OrderService {
                 .sum(ArithmeticOperators.Multiply.valueOf("price")
                         .multiplyBy("quantity")).as("totalRevenue");
 
+
         SortOperation sortStage = Aggregation.sort(Sort.by(Sort.Direction.ASC, "_id"));
 
         Aggregation aggregation = Aggregation.newAggregation(matchStage, unwindOperation, projectStage, groupStage, sortStage);
