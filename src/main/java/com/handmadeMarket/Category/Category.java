@@ -16,7 +16,6 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Category {
-
     @Id
     private String id;
 

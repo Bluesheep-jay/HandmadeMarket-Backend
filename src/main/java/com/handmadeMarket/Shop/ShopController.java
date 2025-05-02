@@ -29,6 +29,10 @@ public class ShopController {
         return shopService.addShop(shop);
     }
 
+    @GetMapping("/total")
+    public long getTotalShops() {
+        return shopService.getTotalShops();
+    }
     @GetMapping("/{id}")
     public Shop getShopById(@PathVariable String id) {
         return shopService.getShopById(id);

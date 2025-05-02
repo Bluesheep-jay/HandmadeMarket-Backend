@@ -21,9 +21,11 @@ public class Product {
     @Id
     private String id;
 
-    @TextIndexed(weight = 3)
     @Field(value = "product_title")
     private String productTitle;
+
+    @Field("product_title_unsigned")
+    private String productTitleUnsigned;
 
     @Field(value = "category_id")
     private String categoryId;
@@ -41,10 +43,10 @@ public class Product {
     private String videoUrl;
 
     @Field(value = "base_price")
-    private double basePrice;
+    private Double basePrice;
 
     @Field(value = "base_quantity")
-    private int baseQuantity;
+    private Integer baseQuantity;
 
     @Field(value = "variation_list")
     private List<Variation> variationList;
@@ -56,11 +58,12 @@ public class Product {
     private String width;
     private String height;
 
-    private double rating = 0.0;
+    private Double rating = 0.0;
+    private Integer soldCount = 0;
 
     @Field("shop_id")
     private String shopId;
 
-    @Field("approved")
-    private boolean approved = false;
+    @Field("product_status_id")
+    private String productStatusId;
 }

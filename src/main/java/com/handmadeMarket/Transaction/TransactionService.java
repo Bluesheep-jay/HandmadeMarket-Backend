@@ -19,4 +19,8 @@ public class TransactionService {
     public List<Transaction> getAllByShopId(String shopId) {
         return transactionRepository.findByTransactionShopId(shopId);
     }
+
+    public List<Transaction> getAll() {
+        return transactionRepository.findAll();
+    }
 }

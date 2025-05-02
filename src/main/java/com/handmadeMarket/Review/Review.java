@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.Instant;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -21,6 +22,8 @@ public class Review {
 
     @Field("review_comment")
     private String reviewComment;
+    @Field("review_image")
+    private List<String> reviewImage;
 
     @Field("is_review_edited")
     private boolean isReviewEdited = false;

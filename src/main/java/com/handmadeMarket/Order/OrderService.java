@@ -1,12 +1,13 @@
 package com.handmadeMarket.Order;
 
+import com.handmadeMarket.DatabaseSequence.SequenceGeneratorService;
 import com.handmadeMarket.Order.dto.DailyRevenueResult;
 import com.handmadeMarket.Order.dto.MonthlyRevenueResult;
+import com.handmadeMarket.Order.dto.OrderWithDetail;
 import com.handmadeMarket.Order.dto.OrderWithProduct;
-import com.handmadeMarket.Order.dto.TotalRevenueResult;
 import com.handmadeMarket.OrderTemp.OrderTemp;
 import com.handmadeMarket.OrderTemp.OrderTempRepository;
-import org.bson.Document;
+import com.handmadeMarket.Product.ProductService;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.*;
@@ -14,29 +15,73 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class OrderService {
     private final String COMPLETED_STATUS_ID = "67d8cd2a347ab249ebe8b15b";
-    private final String CANCELLED_STATUS_ID = "67dbfbaa09072401a615967d";
+    private final String CANCELLED_STATUS_ID = "67dbfb9009072401a615967b";
     private final OrderRepository orderRepository;
     private final OrderTempRepository orderTempRepository;
     private final MongoTemplate mongoTemplate;
+    private final SequenceGeneratorService sequenceGeneratorService;
+    private final ProductService productService;
 
 
-    public OrderService(OrderRepository orderRepository, OrderTempRepository orderTempRepository, MongoTemplate mongoTemplate) {
+    public OrderService(OrderRepository orderRepository, OrderTempRepository orderTempRepository,
+                        MongoTemplate mongoTemplate, SequenceGeneratorService sequenceGeneratorService,
+                        ProductService productService) {
         this.orderRepository = orderRepository;
         this.orderTempRepository = orderTempRepository;
         this.mongoTemplate = mongoTemplate;
+        this.sequenceGeneratorService = sequenceGeneratorService;
+        this.productService = productService;
+    }
+
+    public long getTotalOrder(){
+        return orderRepository.count();
     }
 
     public List<Order> getAll() {
         return orderRepository.findAll();
+    }
+
+    public List<OrderWithDetail> getAllOrdersWithDetail() {
+        Aggregation aggregation = Aggregation.newAggregation(
+                Aggregation.addFields()
+                        .addField("order_user_obj_id").withValue(ConvertOperators.ToObjectId.toObjectId("$order_user_id"))
+                        .addField("order_shop_obj_id").withValue(ConvertOperators.ToObjectId.toObjectId("$order_shop_id"))
+                        .addField("order_status_obj_id").withValue(ConvertOperators.ToObjectId.toObjectId("$order_status_id"))
+                        .build(),
+                Aggregation.lookup("users", "order_user_obj_id", "_id", "user_info"),
+                Aggregation.unwind("user_info", true),
+
+                Aggregation.lookup("shop", "order_shop_obj_id", "_id", "shop_info"),
+                Aggregation.unwind("shop_info", true),
+
+                Aggregation.lookup("orderStatus", "order_status_obj_id", "_id", "order_status_info"),
+                Aggregation.unwind("order_status_info", true),
+
+                Aggregation.project()
+                        .and("_id").as("orderId")
+                        .and("order_no").as("orderNo")
+                        .and("order_date").as("orderDate")
+                        .and("total_price").as("totalPrice")
+                        .and("order_user_id").as("userId")
+                        .and("$user_info.username").as("userName")
+                        .and("order_shop_id").as("shopId")
+                        .and("$shop_info.shop_name").as("shopName")
+                        .and("$order_status_info.status_name").as("orderStatus")
+
+        );
+        AggregationResults<OrderWithDetail> results = mongoTemplate.aggregate(aggregation, "order", OrderWithDetail.class);
+        return results.getMappedResults();
+    }
+
+    public List<Order> getAllByUserId(String userId) {
+        return orderRepository.findByOrderUserId(userId);
     }
 
     public List<OrderWithProduct> getOrdersWithProductsByUserId(String userId) {
@@ -68,15 +113,17 @@ public class OrderService {
 
                 // 6️⃣ Gom nhóm lại theo order ID và kết hợp thông tin sản phẩm
                 Aggregation.group("_id")
+                        .first("order_no").as("orderNo")
                         .first("order_date").as("orderDate")
                         .first("expected_delivery_date").as("expectedDeliveryDate")
                         .first("total_price").as("totalPrice")
+                        .first("shipping_fee").as("shippingFee")
                         .first("order_user_id").as("orderUserId")
                         .first("order_status_id").as("orderStatusId")
                         .first("order_shop_id").as("orderShopId")
                         .first("order_payment_method_id").as("orderPaymentMethodId")
                         .first("order_delivery_address_id").as("orderDeliveryAddressId")
-                        .push("order_details").as("orderDetails") // ✅ Lưu toàn bộ order_details sau khi thêm dữ liệu
+                        .push("order_details").as("orderDetails")
         );
 
         AggregationResults<OrderWithProduct> results = mongoTemplate.aggregate(aggregation, "order", OrderWithProduct.class);
@@ -112,6 +159,7 @@ public class OrderService {
 
                 // 6️⃣ Gom nhóm lại theo order ID và kết hợp thông tin sản phẩm
                 Aggregation.group("_id")
+                        .first("order_no").as("orderNo")
                         .first("order_date").as("orderDate")
                         .first("expected_delivery_date").as("expectedDeliveryDate")
                         .first("total_price").as("totalPrice")
@@ -189,7 +237,32 @@ public class OrderService {
     }
 
     public List<Order> create(List<Order> orders) {
+        int currentYear = LocalDateTime.now().getYear();
+        long baseSeq = sequenceGeneratorService.generateSequence("order_" + currentYear);
+        for (int i = 0; i < orders.size(); i++) {
+            Order order = orders.get(i);
+            long currentSeq = baseSeq + i;
+            String formattedOrderNo = String.format("ORD-%d-%06d", currentYear, currentSeq);
+            order.setOrderNo(formattedOrderNo);
+            order.setOrderSeq(currentSeq);
+            for(OrderDetail orderDetail : order.getOrderDetails()) {
+                String productId = orderDetail.getProductId();
+                int quantity = orderDetail.getQuantity();
+                Map<String, String> selectedOptions = orderDetail.getSelectedOptions();
+                productService.updateSoldCount(orderDetail.getProductId(), orderDetail.getQuantity());
+
+                if(selectedOptions == null || selectedOptions.isEmpty()){
+                    productService.decreaseBaseQuantity(productId, quantity);
+                }else{
+                    productService.decreaseVariationStock(productId, selectedOptions, quantity);
+                }
+
+            }
+
+        }
+
         return orderRepository.saveAll(orders);
+
     }
 
     public List<OrderTemp> saveTempOrders(List<Order> orders) {
@@ -227,7 +300,7 @@ public class OrderService {
         }).toList();
 
         orderTempRepository.deleteAllById(tempOrderIds);
-        return orderRepository.saveAll(realOrders);
+        return create(realOrders);
     }
 
     public Order updateOrderStatus(String orderId, String orderStatusId) {

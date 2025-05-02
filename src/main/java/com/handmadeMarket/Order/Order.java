@@ -24,16 +24,19 @@ public class Order {
     @Field("order_details")
     private List<OrderDetail> orderDetails;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
     @Field("order_date")
     private Instant orderDate;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
     @Field("expected_delivery_date")
     private Instant expectedDeliveryDate;
 
     @Field("total_price")
     private int totalPrice;
+
+    @Field("shipping_fee")
+    private int shippingFee;
 
     @Field("order_user_id")
     private String orderUserId;
@@ -49,4 +52,10 @@ public class Order {
 
     @Field("order_delivery_address_id")
     private String orderDeliveryAddressId;
+
+    @Field("order_no")
+    private String orderNo;
+
+    @Field("order_seq")
+    private long orderSeq;
 }

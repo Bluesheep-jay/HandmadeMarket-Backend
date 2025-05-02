@@ -1,8 +1,10 @@
 package com.handmadeMarket.Category;
 
+import org.bson.Document;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("categories")
@@ -33,6 +35,11 @@ public class CategoryController {
         return categoryService.findAllParentCategories(categoryId);
     }
 
+    //getTop5BestSellingProductCategoriesInAMonth
+    @GetMapping("/top5/{month}/{year}")
+    public List<Document> getTop5BestSellingProductCategoriesInAMonth(@PathVariable int month, @PathVariable int year) {
+        return categoryService.getTop5BestSellingProductCategoriesInAMonth(month, year);
+    }
 
     @GetMapping()
     public List<Category> getAll(){

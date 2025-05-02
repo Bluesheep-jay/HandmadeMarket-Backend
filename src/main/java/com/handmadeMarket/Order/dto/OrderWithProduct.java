@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class OrderWithProduct {
     private String id;
+    private String orderNo;
     private List<OrderDetailWithProduct> orderDetails;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
@@ -21,6 +22,7 @@ public class OrderWithProduct {
 
     private Instant expectedDeliveryDate;
     private int totalPrice;
+    private int shippingFee;
     private String orderUserId;
     private String orderStatusId;
     private String orderShopId;

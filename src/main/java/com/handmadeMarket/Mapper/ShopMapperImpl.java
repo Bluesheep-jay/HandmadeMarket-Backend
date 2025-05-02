@@ -31,7 +31,7 @@ public class ShopMapperImpl implements ShopMapper {
         shop.setIdBackImageUrl( createShopDto.getIdBackImageUrl() );
         shop.setShopRating( 0.0 );
         shop.setShopIsOpen( true );
-        shop.setShopIsActive( true );
+        shop.setShopIsApproved( true );
 
         return shop;
     }

@@ -19,7 +19,6 @@ public class CloudinaryController {
 
     @PostMapping("/image")
     public CompletableFuture<String> uploadImage(@RequestParam("file") MultipartFile file) throws IOException {
-        System.out.println("file: " + "=======================");
         return cloudinaryService.uploadFile(file);
     }
 

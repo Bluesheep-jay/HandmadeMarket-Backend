@@ -49,4 +49,9 @@ public class Users {
     @Field("favourite_shop_list")
     private List<String> favouriteShopList = new ArrayList<>();
 
+    @Field("is_banned")
+    private boolean isBanned = false;
+
+    @Field("ban_reason")
+    private String banReason;
 }

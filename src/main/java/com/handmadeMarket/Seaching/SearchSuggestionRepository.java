@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -21,11 +22,21 @@ public class SearchSuggestionRepository {
         this.mongoTemplate = mongoTemplate;
     }
 
-    public List<String> getSearchSuggestions(String keyword){
+    public static String removeAccent(String input) {
+        if (input == null) return null;
+        String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
+        return normalized.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+    }
+
+    public List<String> getSearchSuggestions(String keyword) {
         Set<String> uniqueSuggestions = new LinkedHashSet<>();
 
+        // Chuyển từ khóa tìm kiếm sang không dấu
+        String keywordUnsigned = removeAccent(keyword);
+
+        // Tìm kiếm trong danh mục
         Query categoryQuery = new Query(
-                Criteria.where("categoryName").regex(".*" + keyword + ".*", "i")
+                Criteria.where("categoryName").regex(".*" + keywordUnsigned + ".*", "i")
         ).limit(6);
         categoryQuery.fields().include("categoryName");
 
@@ -36,12 +47,13 @@ public class SearchSuggestionRepository {
                         .collect(Collectors.toList())
         );
 
-        if(uniqueSuggestions.size() < 6){
+        // Nếu vẫn chưa đủ gợi ý, chia từ khóa thành các từ riêng biệt và tìm kiếm lại
+        if (uniqueSuggestions.size() < 6) {
             String[] keywords = keyword.split("\\s+");
 
             List<Criteria> criteriaList = new ArrayList<>();
-            for (String word: keywords){
-                criteriaList.add(Criteria.where("categoryName").regex(".*" + word + ".*", "i"));
+            for (String word : keywords) {
+                criteriaList.add(Criteria.where("categoryName").regex(".*" + removeAccent(word) + ".*", "i"));
             }
 
             Query fallbackQuery = new Query(new Criteria().andOperator(criteriaList.toArray(new Criteria[0])))
@@ -49,14 +61,15 @@ public class SearchSuggestionRepository {
             fallbackQuery.fields().include("categoryName");
 
             List<Category> moreCate = mongoTemplate.find(fallbackQuery, Category.class);
-            for(Category category: moreCate){
+            for (Category category : moreCate) {
                 uniqueSuggestions.add(category.getCategoryName());
             }
         }
 
+        // Tìm kiếm trong sản phẩm nếu chưa đủ gợi ý
         if (uniqueSuggestions.size() < 6) {
             Query productQuery = new Query(
-                    Criteria.where("productTitle").regex(".*" + keyword + ".*", "i")
+                    Criteria.where("productTitleUnsigned").regex(".*" + keywordUnsigned + ".*", "i")
             ).limit(6 - uniqueSuggestions.size());
             productQuery.fields().include("productTitle");
 
@@ -66,13 +79,13 @@ public class SearchSuggestionRepository {
             }
         }
 
-        if(uniqueSuggestions.size() < 6){
+        // Nếu vẫn chưa đủ gợi ý, tìm thêm sản phẩm theo từng từ
+        if (uniqueSuggestions.size() < 6) {
             String[] keywords = keyword.split("\\s+");
 
             List<Criteria> criteriaList = new ArrayList<>();
-            for (String word: keywords){
-
-                criteriaList.add(Criteria.where("productTitle").regex(".*" + word + ".*", "i"));
+            for (String word : keywords) {
+                criteriaList.add(Criteria.where("productTitleUnsigned").regex(".*" + removeAccent(word) + ".*", "i"));
             }
 
             Query fallbackQuery = new Query(new Criteria().andOperator(criteriaList.toArray(new Criteria[0])))
@@ -80,12 +93,82 @@ public class SearchSuggestionRepository {
             fallbackQuery.fields().include("productTitle");
 
             List<Product> moreProducts = mongoTemplate.find(fallbackQuery, Product.class);
-            for(Product product: moreProducts){
+            for (Product product : moreProducts) {
                 uniqueSuggestions.add(product.getProductTitle());
             }
         }
+
         return new ArrayList<>(uniqueSuggestions);
     }
+
+
+
+
+//    public List<String> getSearchSuggestions(String keyword){
+//        Set<String> uniqueSuggestions = new LinkedHashSet<>();
+//
+//        Query categoryQuery = new Query(
+//                Criteria.where("categoryName").regex(".*" + keyword + ".*", "i")
+//        ).limit(6);
+//        categoryQuery.fields().include("categoryName");
+//
+//        List<Category> categories = mongoTemplate.find(categoryQuery, Category.class);
+//        uniqueSuggestions.addAll(
+//                categories.stream()
+//                        .map(Category::getCategoryName)
+//                        .collect(Collectors.toList())
+//        );
+//
+//        if(uniqueSuggestions.size() < 6){
+//            String[] keywords = keyword.split("\\s+");
+//
+//            List<Criteria> criteriaList = new ArrayList<>();
+//            for (String word: keywords){
+//                criteriaList.add(Criteria.where("categoryName").regex(".*" + word + ".*", "i"));
+//            }
+//
+//            Query fallbackQuery = new Query(new Criteria().andOperator(criteriaList.toArray(new Criteria[0])))
+//                    .limit(6 - uniqueSuggestions.size());
+//            fallbackQuery.fields().include("categoryName");
+//
+//            List<Category> moreCate = mongoTemplate.find(fallbackQuery, Category.class);
+//            for(Category category: moreCate){
+//                uniqueSuggestions.add(category.getCategoryName());
+//            }
+//        }
+//
+//        if (uniqueSuggestions.size() < 6) {
+//            Query productQuery = new Query(
+//                    Criteria.where("productTitle").regex(".*" + keyword + ".*", "i")
+//            ).limit(6 - uniqueSuggestions.size());
+//            productQuery.fields().include("productTitle");
+//
+//            List<Product> products = mongoTemplate.find(productQuery, Product.class);
+//            for (Product product : products) {
+//                uniqueSuggestions.add(product.getProductTitle());
+//            }
+//        }
+//
+//        if(uniqueSuggestions.size() < 6){
+//            String[] keywords = keyword.split("\\s+");
+//
+//            List<Criteria> criteriaList = new ArrayList<>();
+//            for (String word: keywords){
+//
+//                criteriaList.add(Criteria.where("productTitle").regex(".*" + word + ".*", "i"));
+//            }
+//
+//            Query fallbackQuery = new Query(new Criteria().andOperator(criteriaList.toArray(new Criteria[0])))
+//                    .limit(6 - uniqueSuggestions.size());
+//            fallbackQuery.fields().include("productTitle");
+//
+//            List<Product> moreProducts = mongoTemplate.find(fallbackQuery, Product.class);
+//            for(Product product: moreProducts){
+//                uniqueSuggestions.add(product.getProductTitle());
+//            }
+//        }
+//        return new ArrayList<>(uniqueSuggestions);
+//    }
 
 
 

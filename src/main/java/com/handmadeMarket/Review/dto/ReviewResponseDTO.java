@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 
 import java.time.Instant;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -20,6 +21,7 @@ public class ReviewResponseDTO {
     private Instant reviewUpdatedDate;
     private String reviewUserId;
     private String reviewProductId;
+    private List<String> reviewImage;
 
     // Thêm thông tin từ Users
     private String username;

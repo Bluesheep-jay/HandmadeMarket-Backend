@@ -37,6 +37,10 @@ public class UserController {
         return userService.getWishlistProducts(id);
     }
 
+    @GetMapping("/total")
+    public long getTotalUsers() {
+        return userService.getTotalUsers();
+    }
 
     @GetMapping
     public List<UserResponseDto> getAll() {

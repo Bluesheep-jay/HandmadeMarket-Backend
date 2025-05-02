@@ -79,7 +79,7 @@ public class Shop {
     private boolean shopIsOpen = true;
 
     @Field("shop_is_active")
-    private boolean shopIsActive = true;
+    private boolean shopIsApproved = true;
 
     @Field("shop_rating")
     private double shopRating = 0.0;
@@ -117,7 +117,7 @@ public class Shop {
         this.idFrontImageUrl = shop.getIdFrontImageUrl();
         this.idBackImageUrl = shop.getIdBackImageUrl();
         this.shopIsOpen = shop.isShopIsOpen();
-        this.shopIsActive = shop.isShopIsActive();
+        this.shopIsApproved = shop.isShopIsApproved();
         this.shopRating = shop.getShopRating();
         this.userId = shop.getUserId();
         this.productIdList = shop.getProductIdList();

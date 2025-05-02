@@ -1,34 +1,58 @@
 package com.handmadeMarket.Voucher;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-@Document
+import java.time.Instant;
+import java.util.UUID;
+
+@Document(collection = "vouchers")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Voucher {
+    @Id
     private String id;
 
-    @Field("voucher_name")
-    private String voucherName;
+    @Field("code")
+    private String code;
 
-    @Field("voucher_code")
-    private String voucherCode;
+    @Field("discount_value")
+    private double discountValue;
 
-    @Field("voucher_discount")
-    private double voucherDiscount;
+    @Field("min_order_value")
+    private double minOrderValue;
 
-    @Field("voucher_status")
-    private String voucherStatus;
+    @Field("usage_limit")
+    private int usageLimit;
 
-    @Field("voucher_create_date")
-    private String voucherCreateDate;
+    @Field("used_count")
+    private int usedCount;
 
-    @Field("voucher_expired_date")
-    private String voucherExpiredDate;
+    @Field("start_date")
+    private Instant startDate;
 
+    @Field("end_date")
+    private Instant endDate;
+
+    @Field("creator_type")
+    private String creatorType; //ADMIN, SHOP
+
+    @Field("creator_id")
+    private String creatorId;
+
+    @Field("shop_id")
+    private String shopId;
+
+    @Field("status")
+    private String status;
+
+    @Field("created_at")
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
+    private Instant createdAt;
 }

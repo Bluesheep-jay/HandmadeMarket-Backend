@@ -27,6 +27,8 @@ public class UserMapperImpl implements UserMapper {
         userResponseDto.setCartId( users.getCartId() );
         userResponseDto.setWishList( users.getWishList() );
         userResponseDto.setFavouriteShopList( users.getFavouriteShopList() );
+        userResponseDto.setBanned( users.isBanned() );
+        userResponseDto.setBanReason( users.getBanReason() );
         return userResponseDto;
     }
 

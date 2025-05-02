@@ -60,7 +60,7 @@ public class VNPayController {
         String frontendUrl = "http://localhost:3000/customer/vnpay-payment-return";
         int paymentStatus = vnPayService.orderReturn(request, orderIds);
 
-        String totalAmount = request.getParameter("vnp_Amount"); // Lấy số tiền giao dịch từ VNPay
+        String totalAmount = request.getParameter("vnp_Amount");
         if (paymentStatus != 1) {
             return new RedirectView(frontendUrl + "?paymentStatus=failed&totalAmount=" + totalAmount);
         } else {

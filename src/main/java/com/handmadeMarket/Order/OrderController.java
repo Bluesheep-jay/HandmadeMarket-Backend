@@ -2,6 +2,7 @@ package com.handmadeMarket.Order;
 
 import com.handmadeMarket.Order.dto.DailyRevenueResult;
 import com.handmadeMarket.Order.dto.MonthlyRevenueResult;
+import com.handmadeMarket.Order.dto.OrderWithDetail;
 import com.handmadeMarket.Order.dto.OrderWithProduct;
 import org.bson.Document;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,11 @@ public class OrderController {
         this.orderService = orderService;
     }
 
+    @GetMapping("/total")
+    public long getTotalOrders() {
+        return orderService.getTotalOrder();
+    }
+
     @GetMapping("/with-products/customer/{userId}")
     public List<OrderWithProduct> getOrdersWithProductsByUserId(@PathVariable String userId) {
         return orderService.getOrdersWithProductsByUserId(userId);
@@ -28,6 +34,10 @@ public class OrderController {
         return orderService.getOrdersWithProductsByShopId(shopId);
     }
 
+    @GetMapping("/with-detail")
+    public List<OrderWithDetail> getAllOrdersWithDetail() {
+        return orderService.getAllOrdersWithDetail();
+    }
 
     @GetMapping("/daily-revenue-for-month/{shopId}/{year}/{month}")
     public List<DailyRevenueResult> getDailyRevenueForMonth(
@@ -43,6 +53,7 @@ public class OrderController {
             @PathVariable int year) {
         return orderService.getMonthlyRevenueForYear(shopId, year);
     }
+
 
     @GetMapping
     public List<Order> getAll() {

@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
 @Service
 public class ShopService {
@@ -30,6 +29,11 @@ public class ShopService {
         this.productService = productService;
         this.cloudinaryService = cloudinaryService;
     }
+
+    public long getTotalShops() {
+        return shopRepository.count();
+    }
+
 
     public List<Shop> getAllShops() {
         return shopRepository.findAll();
@@ -67,27 +71,42 @@ public class ShopService {
         return savedShop;
     }
 
-    public Shop approveShop(String id) {
+    public void approveShop(String id) {
         Shop existingShop = getShopById(id);
-        if (existingShop.isShopIsActive()) {
+        if (existingShop.isShopIsApproved()) {
             throw new DuplicateResourcesException("shop with id " + id + " is already approved");
         }
-        existingShop.setShopIsActive(true);
-        return shopRepository.save(existingShop);
+        existingShop.setShopIsApproved(true);
+        shopRepository.save(existingShop);
     }
 
-    public Shop closeShop(String id) {
+    public void disapproveShop(String id) {
+        Shop existingShop = getShopById(id);
+        if (!existingShop.isShopIsApproved()) {
+            throw new DuplicateResourcesException("Shop with id " + id + " is already disapproved");
+        }
+        existingShop.setShopIsApproved(false);
+         shopRepository.save(existingShop);
+    }
+
+    public void openShop(String id) {
+        Shop existingShop = getShopById(id);
+
+        existingShop.setShopIsOpen(true);
+         shopRepository.save(existingShop);
+    }
+    public void closeShop(String id) {
         Shop existingShop = getShopById(id);
 
         existingShop.setShopIsOpen(false);
-        return shopRepository.save(existingShop);
+        shopRepository.save(existingShop);
     }
 
     public Shop updateActiveStatus(String id, boolean isActive) {
         Optional<Shop> optionalShop = shopRepository.findById(id);
         if (optionalShop.isPresent()) {
             Shop shopToUpdate = optionalShop.get();
-            shopToUpdate.setShopIsActive(isActive);
+            shopToUpdate.setShopIsApproved(isActive);
             return shopRepository.save(shopToUpdate);
         } else {
             throw new ResourceNotFoundException("shop not found with id " + id);

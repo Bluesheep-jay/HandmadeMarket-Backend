@@ -16,8 +16,14 @@ public class TransactionController {
         this.transactionService = transactionService;
     }
 
+
     @GetMapping("/shop/{shopId}")
     public List<Transaction> getAllByShopId(@PathVariable String shopId) {
         return transactionService.getAllByShopId(shopId);
+    }
+
+    @GetMapping
+    public List<Transaction> getAll() {
+        return transactionService.getAll();
     }
 }

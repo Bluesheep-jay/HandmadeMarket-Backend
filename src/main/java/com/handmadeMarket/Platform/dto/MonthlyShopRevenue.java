@@ -1,4 +1,4 @@
-package com.handmadeMarket.ShopRevenue.dto;
+package com.handmadeMarket.Platform.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -27,4 +27,6 @@ public class UserResponseDto {
     private String cartId;
     private List<String> wishList;
     private List<String> favouriteShopList;
+    private boolean isBanned;
+    private String banReason;
 }

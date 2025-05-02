@@ -22,7 +22,7 @@ public class CloudinaryService {
     @Async
     public CompletableFuture<String> uploadFile(MultipartFile file) throws IOException {
         Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
-        System.out.println("uploadResult: " + uploadResult);
+        System.out.println(uploadResult);
         return CompletableFuture.completedFuture(uploadResult.get("secure_url").toString());
     }
 

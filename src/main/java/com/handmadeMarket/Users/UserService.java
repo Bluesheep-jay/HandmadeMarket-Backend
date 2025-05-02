@@ -46,6 +46,10 @@ public class UserService {
         this.productService = productService;
     }
 
+    public long getTotalUsers() {
+        return userRepository.count();
+    }
+
     public UserResponseDto registerLocalUser(RegisterUserDto registerDto) {
         if (userRepository.existsByEmail(registerDto.getEmail())) {
             throw new IllegalArgumentException("Email is already use!");
@@ -171,10 +175,7 @@ public class UserService {
         }
     }
 
-    public void deleteUser(String id) {
-        userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
-        userRepository.deleteById(id);
-    }
+
 
 
     public List<Users> getAllUsers() {
@@ -186,10 +187,12 @@ public class UserService {
         existingUser.setUsername(user.getUsername());
         existingUser.setEmail(user.getEmail());
         existingUser.setEnumRole(user.getEnumRole());
-        // Update other fields as necessary
         return userRepository.save(existingUser);
     }
 
 
-
+    public void deleteUser(String id) {
+        userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+        userRepository.deleteById(id);
+    }
 }

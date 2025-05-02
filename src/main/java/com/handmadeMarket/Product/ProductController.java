@@ -1,5 +1,6 @@
 package com.handmadeMarket.Product;
 
+import org.bson.Document;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,12 +31,25 @@ public class ProductController {
         return productService.getProductsByRootCategoryId(rootCategoryId);
     }
 
+    @GetMapping("/total")
+    public long getTotalProducts() {
+        return productService.getTotalProduct();
+    }
 
     @PostMapping("/by-id-list")
     public List<Product> getProductsByIdList(@RequestBody List<String> idList) {
         return productService.getByIdList(idList);
     }
 
+//    @GetMapping("/best-sellers")
+//    public List<Product> getBestSellingProductsForCurrentMonth() {
+//        return productService.getBestSellingProductsForCurrentMonth();
+//    }
+
+    @GetMapping("/best-sellers")
+    public List<Document> getBestSellingProductsForCurrentMonth() {
+        return productService.getBestSellingProductsForCurrentMonth();
+    }
 
     @GetMapping
     public List<Product> getAll() {

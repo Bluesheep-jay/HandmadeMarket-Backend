@@ -7,17 +7,25 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-@Document
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class PlatformRevenue {
-    @Id
+    @Field("_id")
     private String id;
+
+    @Field("shop_id")
+    private String shopId;
 
     @Field("month")
     private String month;
 
-    @Field("total_platform_revenue")
-    private double totalPlatformRevenue;
+    @Field("total_revenue")
+    private double totalRevenue;
+
+    @Field("commission_rate")
+    private double commissionRate;
+
+    @Field("commission_fee")
+    private double commissionFee;
 }

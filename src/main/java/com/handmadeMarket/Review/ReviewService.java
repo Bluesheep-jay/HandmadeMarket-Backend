@@ -68,6 +68,7 @@ public class ReviewService {
                         .andExpression("$review_updated_date").as("reviewUpdatedDate")
                         .andExpression("$review_user_id").as("reviewUserId")
                         .andExpression("$review_product_id").as("reviewProductId")
+                        .andExpression("$review_image").as("reviewImage")
                         .andExpression("$userInfo.username").as("username")
                         .andExpression("$userInfo.avatar_url").as("avatarUrl")
 //
